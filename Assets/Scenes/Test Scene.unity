@@ -11202,6 +11202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 870072983}
+  - component: {fileID: 870072984}
   m_Layer: 0
   m_Name: Nozzle Tip
   m_TagString: Untagged
@@ -11224,6 +11225,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 417596615}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &870072984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870072982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f867dfaa4591e114198e3c77b766e9a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtinguisherStream
+  streamType: 0
+  suppressionPower: 10
 --- !u!1 &874919884
 GameObject:
   m_ObjectHideFlags: 0
@@ -28286,6 +28301,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1525320739}
     m_Modifications:
+    - target: {fileID: 8829451551789304536, guid: e91fa0fac941e714e8c4d5709097019f, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8829451551789304537, guid: e91fa0fac941e714e8c4d5709097019f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.368
@@ -28391,7 +28410,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.42, y: 1.42, z: 1.42}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &1949265667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31929,7 +31948,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146195593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f867dfaa4591e114198e3c77b766e9a3, type: 3}
   m_Name: 

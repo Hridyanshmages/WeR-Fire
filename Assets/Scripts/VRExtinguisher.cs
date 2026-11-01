@@ -6,33 +6,33 @@ public class VRExtinguisher : MonoBehaviour
 {
     [Header("Extinguisher Properties")]
     [SerializeField] private ExtinguisherType extinguisherType;
+    [SerializeField] private float suppressionPower = 25f;
+    [SerializeField] private float maxSprayDistance = 5f;
     
     [Header("VFX Prefab")]
     [Tooltip("Drag your Extinguisher Particle System Prefab here")]
     [SerializeField] private GameObject dischargePrefab;
-    [Tooltip("Transform where the particles will spawn (e.g., the nozzle). Defaults to this object if empty.")]
+    [Tooltip("Transform where the raycast and particles will spawn (e.g., the nozzle). Defaults to this object if empty.")]
     [SerializeField] private Transform nozzlePoint;
 
-    private ParticleSystem dischargeParticles; // Private runtime instance
+    private ParticleSystem dischargeParticles;
     private XRGrabInteractable bodyGrabInteractable;
+    private bool isSpraying = false;
 
     private void Awake()
     {
         bodyGrabInteractable = GetComponent<XRGrabInteractable>();
 
-        // Spawn the prefab at runtime and get its Particle System
         if (dischargePrefab != null)
         {
             Transform spawnLocation = nozzlePoint != null ? nozzlePoint : transform;
             GameObject spawnedVFX = Instantiate(dischargePrefab, spawnLocation);
             
-            // Ensure the spawned prefab aligns perfectly with the nozzle
             spawnedVFX.transform.localPosition = Vector3.zero;
             spawnedVFX.transform.localRotation = Quaternion.identity;
             
             dischargeParticles = spawnedVFX.GetComponentInChildren<ParticleSystem>();
 
-            // Ensure it does not play immediately on startup
             if (dischargeParticles != null)
             {
                 dischargeParticles.Stop();
@@ -54,11 +54,33 @@ public class VRExtinguisher : MonoBehaviour
 
     private void OnTriggerSqueezed(ActivateEventArgs args)
     {
+        isSpraying = true;
         if (dischargeParticles != null) dischargeParticles.Play();
     }
 
     private void OnTriggerReleased(DeactivateEventArgs args)
     {
+        isSpraying = false;
         if (dischargeParticles != null) dischargeParticles.Stop();
+    }
+
+    private void Update()
+    {
+        if (!isSpraying) return;
+
+        Transform rayOrigin = nozzlePoint != null ? nozzlePoint : transform;
+
+        // Perform the raycast
+        if (Physics.Raycast(rayOrigin.position, rayOrigin.forward, out RaycastHit hit, maxSprayDistance))
+        {
+            Debug.Log($"[VRExtinguisher] Raycast hit: {hit.collider.name}");
+            
+            // Check if we hit a fire
+            if (hit.collider.TryGetComponent<FireSource>(out var fire))
+            {
+                Debug.Log($"[VRExtinguisher] Raycast hit FireSource. Applying extinguisher.");
+                fire.ApplyExtinguisher(extinguisherType, suppressionPower);
+            }
+        }
     }
 }

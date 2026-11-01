@@ -65,7 +65,16 @@ public class FireSource : MonoBehaviour
 
     private void Extinguish()
     {
-        fireParticles.Stop();
-        gameObject.SetActive(false);
+        if (fireParticles != null)
+        {
+            fireParticles.Stop();
+        }
+        
+        // Disable the collider so the extinguisher stops registering hits
+        var col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = false;
+        }
     }
 }
