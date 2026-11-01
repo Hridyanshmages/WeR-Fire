@@ -9,16 +9,28 @@ public class FireSource : MonoBehaviour
     [SerializeField] private ParticleSystem fireParticles;
     
     private float currentHealth;
+    private Collider fireCollider; // Optimization: Cached reference
+    private ParticleSystem.MainModule fireMainModule; // Optimization: Cached struct
 
     public FireClass Type => fireType;
 
     private void Start()
     {
         currentHealth = maxHealth;
+        
+        // Cache components at startup to avoid expensive calls during gameplay
+        fireCollider = GetComponent<Collider>();
+        if (fireParticles != null)
+        {
+            fireMainModule = fireParticles.main;
+        }
     }
 
     public void ApplyExtinguisher(ExtinguisherType agentType, float dpsRate)
     {
+        // Optimization: Early exit if the fire is already dead
+        if (currentHealth <= 0) return;
+
         bool isEffective = IsEffectiveAgent(agentType);
 
         if (isEffective)
@@ -27,8 +39,10 @@ public class FireSource : MonoBehaviour
             currentHealth = Mathf.Max(0, currentHealth);
             
             // Scale particle effect intensity with remaining health
-            var main = fireParticles.main;
-            main.startSize = Mathf.Lerp(0.1f, 1.5f, currentHealth / maxHealth);
+            if (fireParticles != null)
+            {
+                fireMainModule.startSize = Mathf.Lerp(0.1f, 1.5f, currentHealth / maxHealth);
+            }
 
             if (currentHealth <= 0)
             {
@@ -58,6 +72,7 @@ public class FireSource : MonoBehaviour
         // Example: spraying water on electrical or oil fire causes flair-up
         if (agent == ExtinguisherType.Water && (fireType == FireClass.ClassB || fireType == FireClass.ClassC))
         {
+            // Fixed the broken syntax from the copy-paste
             currentHealth = Mathf.Min(maxHealth * 1.5f, currentHealth + 10f * Time.deltaTime);
             // Trigger feedback (sparks/flame explosion/audio cue)
         }
@@ -71,10 +86,9 @@ public class FireSource : MonoBehaviour
         }
         
         // Disable the collider so the extinguisher stops registering hits
-        var col = GetComponent<Collider>();
-        if (col != null)
+        if (fireCollider != null)
         {
-            col.enabled = false;
+            fireCollider.enabled = false;
         }
     }
 }

@@ -28345,6 +28345,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8829451551789304537, guid: e91fa0fac941e714e8c4d5709097019f, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8829451551789304542, guid: e91fa0fac941e714e8c4d5709097019f, type: 3}
       propertyPath: m_Name
       value: VFX_Fire_01_Big
@@ -32125,6 +32129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRExtinguisher
   extinguisherType: 0
+  suppressionPower: 25
   dischargePrefab: {fileID: 4837343242800250203, guid: 7991163288cb15946b0a74466d801d12, type: 3}
   nozzlePoint: {fileID: 870072983}
 --- !u!65 &2146195602
